@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indonex - Innovative Cardiac Data Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.google.com/specimen/Roboto" rel="stylesheet">
+    <style>
+        :root {
+            --primary-cyan: #00d4ff;
+            --primary-blue: #0066ff;
+            --dark-bg: #0a0e1a;
+            --darker-bg: #050810;
+            --card-bg: #151b2e;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --accent-green: #00ff88;
+            --gradient-primary: linear-gradient(135deg, var(--primary-cyan) 0%, var(--primary-blue) 100%);
+            --gradient-card: linear-gradient(145deg, rgba(0, 212, 255, 0.05) 0%, rgba(0, 102, 255, 0.05) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--dark-bg);
+            background-image: url('bgHd.png');
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Dark overlay to ensure text readability */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 26, 0.4);
+            z-index: -2;
+        }
+
+        /* Animated background grid - overlay on top of image */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 14, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 14, 26, 0.95);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .logo-symbol {
+            width: 45px;
+            height: 45px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+
+        .logo-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-cyan);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 8rem 2rem 4rem;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text {
+            text-align: left;
+        }
+
+        .hero-image-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+            opacity: 0;
+            animation: fadeInRight 1s ease forwards 0.5s;
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text {
+                text-align: center;
+            }
+
+            .hero-image {
+                max-width: 500px;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--primary-cyan);
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.2s;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 1.9rem;
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.4s;
+        }
+
+        .hero-description {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.6s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.8s;
+        }
+
+        .btn {
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-cyan);
+            border: 2px solid var(--primary-cyan);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-cyan);
+            color: var(--dark-bg);
+            transform: translateY(-3px);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 8rem 2rem;
+            position: relative;
+            min-height: 400px;
+        }
+        
+        /* Alternate sections with subtle overlay for depth - REMOVED */
+        section:nth-child(even) {
+            background: transparent;
+        }
+        
+        section:nth-child(odd) {
+            background: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--primary-cyan);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Core Values Grid */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .value-card {
+            background: var(--gradient-card);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+        }
+
+        .value-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .value-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .value-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .value-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            position: relative;
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 20px;
+            padding: 3rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.6s ease;
+        }
+
+        .feature-card:hover::after {
+            transform: scale(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 20px 50px rgba(0, 212, 255, 0.2);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-primary);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Devices Section */
+        .devices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 3rem;
+        }
+
+        .device-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .device-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .device-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 25px 60px rgba(0, 212, 255, 0.25);
+        }
+
+        .device-card:hover::before {
+            opacity: 0.03;
+        }
+
+        .device-image-container {
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            overflow: hidden;
+        }
+
+        .device-image-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+        }
+
+        .device-image {
+            max-width: 100%;
+            max-height: 280px;
+            object-fit: contain;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.5s ease;
+            filter: drop-shadow(0 10px 30px rgba(0, 212, 255, 0.2));
+        }
+
+        .device-card:hover .device-image {
+            transform: scale(1.05);
+        }
+
+        .device-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .device-content {
+            padding: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .device-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .device-intro {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .device-specs {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .spec-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0, 212, 255, 0.03);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .spec-item:hover {
+            background: rgba(0, 212, 255, 0.08);
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateX(5px);
+        }
+
+        .spec-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .spec-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .spec-text strong {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .spec-text span {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Process Flow */
+        .process-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 30px;
+            padding: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.03) 0%, rgba(0, 102, 255, 0.03) 100%);
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            position: relative;
+        }
+
+        .process-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .process-step-number {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .process-step-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .process-step-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .stat-card {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;   /* ← use this */
+            margin-bottom: 1rem;
+        }
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Testimonials */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+        }
+
+        .testimonial-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 20px;
+            padding: 3rem;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 20px 50px rgba(0, 212, 255, 0.2);
+        }
+
+        .testimonial-quote {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-role {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Contact Section */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 30px;
+            padding: 4rem;
+        }
+
+        .contact-info h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 1rem;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* Best Solutions Section */
+        .solutions-section {
+            background: transparent;
+            padding: 6rem 2rem;
+        }
+
+        .solutions-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .solutions-content h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .solutions-content p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .solutions-features {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .solution-feature {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+        }
+
+        .solution-feature-icon {
+            font-size: 2rem;
+            min-width: 50px;
+        }
+
+        .solution-feature h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary-cyan);
+        }
+
+        .solution-feature p {
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .solutions-image {
+            position: relative;
+        }
+
+        .solutions-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Real-Time Professional Section */
+        .professional-section {
+            padding: 6rem 2rem;
+            background: transparent;
+        }
+
+        .professional-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .professional-image {
+            position: relative;
+        }
+
+        .professional-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+        }
+
+        .professional-content h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .professional-content p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .professional-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .professional-stat {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .professional-stat:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .professional-stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .professional-stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker-bg);
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h4 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 1.5rem;
+            color: var(--primary-cyan);
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-cyan);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary-cyan);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-description {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .devices-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .device-image-container {
+                min-height: 250px;
+            }
+
+            .solutions-container,
+            .professional-container {
+                grid-template-columns: 1fr;
+            }
+
+            .solutions-content h2,
+            .professional-content h2 {
+                font-size: 2rem;
+            }
+
+            .professional-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="logo-symbol.png" alt="Indonex Logo" class="logo-symbol">
+                <span class="logo-text">INDONEX</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#devices">Devices</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+            <div class="hero-subtitle">Welcome to Indonex</div>
+            <h1 class="hero-title">Innovative Cardiac<br>Data Management</h1>
+            <p class="hero-description">Advanced cloud-based solutions for cardiac monitoring, analysis, and interpretation</p>
+            <div class="cta-buttons">
+                <a href="#contact" class="btn btn-primary">Request Demo</a>
+                <a href="#services" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+            <div class="hero-image-container">
+                <img src="heroa.png" alt="Advanced cardiac monitoring technology with holographic heart visualization" class="hero-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Values -->
+    <section class="container">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-subtitle">Our Commitment</div>
+                <h2 class="section-title">Built on Excellence</h2>
+            </div>
+            <div class="values-grid">
+                <div class="value-card fade-in">
+                    <div class="value-number">01</div>
+                    <h3 class="value-title">Integrity</h3>
+                    <p class="value-description">Our intensive QA process encourages abundance of caution rather than under-calling, ensuring fail-proof reporting of critical incidents.</p>
+                </div>
+                <div class="value-card fade-in">
+                    <div class="value-number">02</div>
+                    <h3 class="value-title">Quality</h3>
+                    <p class="value-description">Enhanced patient care through accurate analysis and clinician-oriented interpretation is the primary goal of our team of credentialed CCTs and CRATs.</p>
+                </div>
+                <div class="value-card fade-in">
+                    <div class="value-number">03</div>
+                    <h3 class="value-title">Innovation</h3>
+                    <p class="value-description">Innovative data management solutions on our cloud-based, device-agnostic platform frees your resources up to focus on what they do best.</p>
+                </div>
+                <div class="value-card fade-in">
+                    <div class="value-number">04</div>
+                    <h3 class="value-title">Dedication</h3>
+                    <p class="value-description">Our global team of cardiac technology experts work with you to speed up clinical decision making for quicker and more efficient all-round outcomes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Solutions Section -->
+    <section id="about">
+        <div class="solutions-container">
+            <div class="solutions-content fade-in">
+                <h2>The Best Solutions for Your Practice</h2>
+                <p>We offer premium cardiac monitoring services at reasonable rates with a comprehensive, cloud-based platform designed to streamline your workflow.</p>
+                
+                <div class="solutions-features">
+                    <div class="solution-feature">
+                        <div class="solution-feature-icon">💎</div>
+                        <div>
+                            <h4>Superior Value</h4>
+                            <p>Premium services at competitive rates with dedicated certified cardiac technicians and account coordinators.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-feature">
+                        <div class="solution-feature-icon">🔒</div>
+                        <div>
+                            <h4>1028-bit Encryption</h4>
+                            <p>Enterprise-grade security ensuring your data is protected throughout the entire process.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-feature">
+                        <div class="solution-feature-icon">⚡</div>
+                        <div>
+                            <h4>Device Agnostic Platform</h4>
+                            <p>Next-generation, highly scalable Holter and Event management system that works with any device.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="solution-feature">
+                        <div class="solution-feature-icon">🔄</div>
+                        <div>
+                            <h4>Seamless EMR Integration</h4>
+                            <p>Full integration with your existing technology—no need to change your workflow.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="solutions-image fade-in">
+                <img src="best-solutions.jfif" alt="Cloud-based cardiac monitoring platform">
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-subtitle">What We Offer</div>
+                <h2 class="section-title">Comprehensive Cardiac Monitoring</h2>
+                <p class="section-description">We offer services for cardiac data management, analysis and interpretation. We help speed up accurate arrhythmia detection, trigger real time alerts, generate higher productivity and improve efficiency.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🔬</div>
+                    <h3 class="feature-title">Standard Holter Monitoring</h3>
+                    <p class="feature-description">Comprehensive 24-48 hour cardiac rhythm monitoring with detailed analysis and reporting.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Extended Holter Monitoring</h3>
+                    <p class="feature-description">Long-term monitoring solutions up to 15 days for comprehensive cardiac assessment.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Cardiac Event Monitoring</h3>
+                    <p class="feature-description">Patient-activated monitoring for capturing intermittent cardiac events.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">📡</div>
+                    <h3 class="feature-title">Mobile Cardiac Telemetry</h3>
+                    <p class="feature-description">Real-time wireless monitoring with instant alerts for critical events.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real-Time Professional Section -->
+    <section class="professional-section">
+        <div class="professional-container">
+            <div class="professional-image fade-in">
+                <img src="real-time-professional.jfif" alt="Certified cardiac technicians providing real-time monitoring">
+            </div>
+            
+            <div class="professional-content fade-in">
+                <h2>Real-Time Professional Monitoring</h2>
+                <p>Our team of certified cardiac technicians provides around-the-clock monitoring and analysis. We understand how important it is to have accurate and reliable reports—we work to get it right and are committed to constantly improving.</p>
+                
+                <p>Build your personal team of trusted and familiar certified cardiac technicians (CCT) and account coordinators who understand your practice and patient needs.</p>
+                
+                <div class="professional-stats">
+                    <div class="professional-stat">
+                        <div class="professional-stat-number">24/7</div>
+                        <div class="professional-stat-label">Real-Time Monitoring</div>
+                    </div>
+                    
+                    <div class="professional-stat">
+                        <div class="professional-stat-number">&lt;48hr</div>
+                        <div class="professional-stat-label">Report Delivery</div>
+                    </div>
+                    
+                    <div class="professional-stat">
+                        <div class="professional-stat-number">100%</div>
+                        <div class="professional-stat-label">Certified CCTs</div>
+                    </div>
+                    
+                    <div class="professional-stat">
+                        <div class="professional-stat-number">∞</div>
+                        <div class="professional-stat-label">Accuracy Focus</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Devices Section -->
+    <section id="devices">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-subtitle">Our Technology</div>
+                <h2 class="section-title">Cardiac Monitoring Devices</h2>
+                <p class="section-description">Clinically validated, patient-friendly devices designed for continuous, high-fidelity cardiac data capture</p>
+            </div>
+            
+            <div class="devices-grid">
+                <!-- myPatch SL -->
+                <div class="device-card fade-in">
+                    <div class="device-image-container">
+                        <img src="myPatch_sl.jpg" alt="myPatch SL" class="device-image">
+                        <div class="device-badge">Revolutionary</div>
+                    </div>
+                    <div class="device-content">
+                        <h3 class="device-title">myPatch<sup>®</sup> SL</h3>
+                        <p class="device-intro">A revolutionary, water resistant Holter monitor. With its selectable channel and sample rate selection, the user can determine how many days myPatch® records.</p>
+                        <div class="device-specs">
+                            <div class="spec-item">
+                                <div class="spec-icon">⚖️</div>
+                                <div class="spec-text">
+                                    <strong>Ultra-Light</strong>
+                                    <span>Only 1/2 ounce</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">📊</div>
+                                <div class="spec-text">
+                                    <strong>Multi-Channel</strong>
+                                    <span>Records 1, 2 or 3 channels</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">⏱️</div>
+                                <div class="spec-text">
+                                    <strong>Extended Recording</strong>
+                                    <span>Up to 72 hours</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">💧</div>
+                                <div class="spec-text">
+                                    <strong>Water Resistant</strong>
+                                    <span>Patient comfort priority</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">🔌</div>
+                                <div class="spec-text">
+                                    <strong>No External Components</strong>
+                                    <span>No flashcards, pouches or batteries</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">🔄</div>
+                                <div class="spec-text">
+                                    <strong>Wide Compatibility</strong>
+                                    <span>Compatible with many Holter systems</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trident Nano -->
+                <div class="device-card fade-in">
+                    <div class="device-image-container">
+                        <img src="nano.webp" alt="Trident Nano" class="device-image">
+                        <div class="device-badge">Advanced</div>
+                    </div>
+                    <div class="device-content">
+                        <h3 class="device-title">Trident™ Nano</h3>
+                        <p class="device-intro">Combining decades of research and innovation to deliver a streamlined remote ECG recording solution from start to finish.</p>
+                        <div class="device-specs">
+                            <div class="spec-item">
+                                <div class="spec-icon">📈</div>
+                                <div class="spec-text">
+                                    <strong>3-Channel Recording</strong>
+                                    <span>From single patch electrode or 3-lead cable</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">🔌</div>
+                                <div class="spec-text">
+                                    <strong>Fast Data Retrieval</strong>
+                                    <span>Simple USB connection</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">🔋</div>
+                                <div class="spec-text">
+                                    <strong>Rechargeable</strong>
+                                    <span>Fully reusable device</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">💡</div>
+                                <div class="spec-text">
+                                    <strong>LED Indicators</strong>
+                                    <span>Multi-color notifications</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">🚿</div>
+                                <div class="spec-text">
+                                    <strong>Water-Resistant</strong>
+                                    <span>Safe for showering</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trident 40 -->
+                <div class="device-card fade-in">
+                    <div class="device-image-container">
+                        <img src="Trident-40-front.png" alt="Trident 40" class="device-image">
+                        <div class="device-badge">Premium</div>
+                    </div>
+                    <div class="device-content">
+                        <h3 class="device-title">Trident™ 40</h3>
+                        <p class="device-intro">Professional-grade cardiac monitoring with advanced features and extended recording capabilities for comprehensive patient assessment.</p>
+                        <div class="device-specs">
+                            <div class="spec-item">
+                                <div class="spec-icon">📅</div>
+                                <div class="spec-text">
+                                    <strong>Extended Recording</strong>
+                                    <span>Up to 30 days continuous ECG</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">📱</div>
+                                <div class="spec-text">
+                                    <strong>Color Touchscreen</strong>
+                                    <span>Large LCD with digital diary</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">🔋</div>
+                                <div class="spec-text">
+                                    <strong>Lithium Battery</strong>
+                                    <span>Charge while in use</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">📦</div>
+                                <div class="spec-text">
+                                    <strong>Compact Design</strong>
+                                    <span>Discreet and portable</span>
+                                </div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-icon">💧</div>
+                                <div class="spec-text">
+                                    <strong>Water-Resistant</strong>
+                                    <span>Protected case design</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CardiacCloudAI Process -->
+    <section id="process">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-subtitle">Our Platform</div>
+                <h2 class="section-title">Built for Clinical Excellence</h2>
+            </div>
+            <div class="process-container fade-in">
+                <div class="process-grid">
+                    <div class="process-step">
+                        <div class="process-step-number">🔒</div>
+                        <h4 class="process-step-title">Security</h4>
+                        <p class="process-step-description">1028-bit encryption ensures your data remains secure throughout the entire process from upload to archiving.</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">⚡</div>
+                        <h4 class="process-step-title">Speed</h4>
+                        <p class="process-step-description">Next morning delivery as standard. Files received by 11pm EST returned the following morning.</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">💎</div>
+                        <h4 class="process-step-title">Superior Value</h4>
+                        <p class="process-step-description">Premium cardiac monitoring services at reasonable rates with dedicated certified cardiac technicians.</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">🚀</div>
+                        <h4 class="process-step-title">Innovation</h4>
+                        <p class="process-step-description">Device agnostic, highly scalable platform with seamless EMR integration.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section>
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Clinical Operations at Scale</h2>
+            </div>
+
+            <div class="stats-grid fade-in">
+            
+
+            <div class="stat-card">
+                <div class="stat-number" 
+                    data-base="100000"
+                    data-start="2025-01-01T00:00:00Z"
+                    data-rate="hourly"
+                    data-step="1">0</div>
+                <div class="stat-label">Total Reports</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number" 
+                    data-base="900"
+                    data-start="2025-01-01T00:00:00Z"
+                    data-rate="monthly"
+                    data-step="1">0</div>
+                <div class="stat-label">Projects Completed</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number" 
+                    data-base="150"
+                    data-start="2025-01-01T00:00:00Z"
+                    data-rate="monthly"
+                    data-step="5">0</div>
+                <div class="stat-label">Total Devices</div>
+            </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- Testimonials -->
+    <section>
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-subtitle">Client Feedback</div>
+                <h2 class="section-title">What Our Clients Say</h2>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card fade-in">
+                    <p class="testimonial-quote">"The Indonex team of technicians are extremely focused on providing the greatest detail that I can ask for. They are easy to work with and very dependable."</p>
+                    <div class="testimonial-author">
+                        <div>
+                            <div class="testimonial-name">Dr. Gokul Reddy</div>
+                            <div class="testimonial-role">MBBS, MD, Interventional Cardiologist</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <p class="testimonial-quote">"I was surprised to see exactly how the Holter monitor recorded all of my heartbeats. The doctor showed me when I had the irregular heartbeat. I was put on a new medicine after wearing the monitor."</p>
+                    <div class="testimonial-author">
+                        <div>
+                            <div class="testimonial-name">B. Nagi Reddy</div>
+                            <div class="testimonial-role">IT Professional, Hyderabad</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-subtitle">Get In Touch</div>
+                <h2 class="section-title">Request a Demo</h2>
+            </div>
+            <div class="contact-container fade-in">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div>
+                            <strong>Address</strong><br>
+                            1A, Urdu University Road<br>
+                            Sri Shyam Nagar, Telecom Nagar<br>
+                            Gachibowli, Hyderabad - 500032
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div>
+                            <strong>Phone</strong><br>
+                            +91-4035169209
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">✉️</div>
+                        <div>
+                            <strong>Email</strong><br>
+                            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0d7e6c61687e4d64636962636875236e6260">[email&#160;protected]</a>
+                        </div>
+                    </div>
+                </div>
+                <form action="https://formsubmit.co/harishg@cardiacintel.com" method="POST">
+                    <input type="hidden" name="_subject" value="New Contact Form Submission">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="text" name="_honey" style="display:none">
+                    <input type="hidden" name="_next" value="/thank-you.html">
+
+                    <!-- User fields -->
+                    <!-- User fields -->
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" placeholder="Your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" placeholder="your@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea name="message" placeholder="Tell us about your needs..." required></textarea>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <button type="submit" class="btn btn-primary">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About Indonex</h4>
+                <p>Indonex is a Hyderabad based technology company founded by seasoned entrepreneurs with more than 50 years of cumulative experience in Healthcare Technology.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#services">Services</a>
+                <a href="#devices">Devices</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Privacy Policy</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Indonex. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Time-based dynamic counter calculation
+        const calculateDynamicValue = (element) => {
+            const base = parseInt(element.getAttribute('data-base'));
+            const startDate = new Date(element.getAttribute('data-start'));
+            const rate = element.getAttribute('data-rate');
+            const step = parseInt(element.getAttribute('data-step'));
+            
+            const now = new Date();
+            const diffMs = now - startDate;
+            
+            let increment = 0;
+            
+            if (rate === 'hourly') {
+                // Calculate hours since start date
+                const hours = Math.floor(diffMs / (1000 * 60 * 60));
+                increment = hours * step;
+            } else if (rate === 'monthly') {
+                // Calculate months since start date
+                const yearsDiff = now.getFullYear() - startDate.getFullYear();
+                const monthsDiff = now.getMonth() - startDate.getMonth();
+                const totalMonths = yearsDiff * 12 + monthsDiff;
+                increment = Math.max(0, totalMonths) * step;
+            }
+            
+            return base + increment;
+        };
+        
+        // Animate counter from 0 to current value
+        const animateCounter = (element) => {
+            const targetValue = calculateDynamicValue(element);
+            const duration = 2000; // 2 seconds animation
+            const increment = targetValue / (duration / 16);
+            let current = 0;
+
+            const updateCounter = () => {
+                current += increment;
+                if (current < targetValue) {
+                    element.textContent = Math.floor(current).toLocaleString();
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    element.textContent = targetValue.toLocaleString();
+                    // Store the final value for live updates
+                    element.setAttribute('data-current-value', targetValue);
+                }
+            };
+
+            updateCounter();
+        };
+        
+        // Update counters in real-time (every minute)
+        const updateCountersLive = () => {
+            document.querySelectorAll('.stat-number').forEach(counter => {
+                if (counter.classList.contains('counted')) {
+                    const newValue = calculateDynamicValue(counter);
+                    counter.textContent = newValue.toLocaleString();
+                    counter.setAttribute('data-current-value', newValue);
+                }
+            });
+        };
+        
+        // Update every minute (60000ms)
+        setInterval(updateCountersLive, 60000);
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = entry.target.querySelectorAll('.stat-number');
+                    counters.forEach(counter => {
+                        if (!counter.classList.contains('counted')) {
+                            animateCounter(counter);
+                            counter.classList.add('counted');
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stats-grid').forEach(el => statsObserver.observe(el));
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Form submission
+        document.querySelector('.contact-form')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+    </script>
+    <script>
+        (function () {
+        const now = new Date();
+
+        document.querySelectorAll('.stat-number').forEach(el => {
+            const base = Number(el.dataset.base);
+            const step = Number(el.dataset.step);
+            const start = new Date(el.dataset.start);
+            const rate = el.dataset.rate;
+
+            if (
+            isNaN(base) ||
+            isNaN(step) ||
+            isNaN(start.getTime()) ||
+            !rate
+            ) {
+            el.textContent = '—';
+            return;
+            }
+
+            let increment = 0;
+
+            if (rate === 'hourly') {
+            increment = Math.floor((now - start) / 36e5);
+            }
+
+            if (rate === 'monthly') {
+            increment =
+                (now.getFullYear() - start.getFullYear()) * 12 +
+                (now.getMonth() - start.getMonth());
+            }
+
+            el.textContent = (base + increment * step).toLocaleString();
+        });
+        })();
+    </script>
+</body>
+</html>
